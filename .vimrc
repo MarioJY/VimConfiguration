@@ -41,7 +41,7 @@ set encoding=utf-8
 "自动判断编码时 依次尝试以下编码
 set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 "检测文件类型
-filetype on
+filetype off
 "针对不同的文件采取不同的缩进方式
 filetype indent on
 "允许插件
@@ -53,7 +53,17 @@ if has("autocmd")
     au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
         \| exe "normal g'\"" | endif
 endif
-
+"Vim自动补全括号
+inoremap ( ()<ESC>i
+inoremap [ []<ESC>i
+inoremap { {}<ESC>i
+"inoremap < <><ESC>i
+"行和列所处位置高亮
+au WinLeave * set nocursorline nocursorcolumn
+au WinEnter * set cursorline cursorcolumn
+set cursorline cursorcolumn
+"禁用缩进用于粘贴
+set pastetoggle=<F9>
 "*********************************************************
 ""                  Molokai 配置                        *
 "*********************************************************
@@ -67,7 +77,6 @@ colorscheme molokai
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-
 "My Bundles here:
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'fatih/vim-go'
@@ -75,7 +84,6 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'SirVer/ultisnips'
 Plugin 'nsf/gocode', {'rtp': 'vim/'}
 Bundle 'scrooloose/nerdtree'
-"Bundle 'fholgado/minibufexpl.vim'
 Bundle 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'airblade/vim-gitgutter'
@@ -90,17 +98,6 @@ call vundle#end()
 let NERDTreeWinPos='left'
 let NERDTreeWinSize=30
 map <F2> :NERDTreeToggle<CR>
-
-"*****************************************************
-""                   Minibufexpl配置                  *
-"*****************************************************
-"let g:miniBufExplMapWindowNavVim = 1   
-"let g:miniBufExplMapWindowNavArrows = 1   
-"let g:miniBufExplMapCTabSwitchBufs = 1   
-"let g:miniBufExplModSelTarget = 1  
-"let g:miniBufExplMoreThanOne=0
-"map <F11> :MBEbp<CR>
-"map <F12> :MBEbn<CR>
 
 "*****************************************************
 ""                   airline配置                      *
@@ -150,9 +147,3 @@ let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>']
 let g:UltiSnipsExpandTrigger="<tab>"
 "let g:UltiSnipsJumpForwardTrigger="<c-b>"
 "let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-"Vim自动补全括号
-inoremap ( ()<ESC>i
-inoremap [ []<ESC>i
-inoremap { {}<ESC>i
-"inoremap < <><ESC>i
