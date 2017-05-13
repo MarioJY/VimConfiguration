@@ -90,6 +90,7 @@ Plugin 'airblade/vim-gitgutter'
 Bundle 'majutsushi/tagbar'
 Bundle 'Blackrush/vim-gocode'
 Bundle 'dgryski/vim-godef'
+Bundle 'tpope/vim-fugitive'
 call vundle#end()
 
 "*****************************************************
