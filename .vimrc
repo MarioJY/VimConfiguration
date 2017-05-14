@@ -25,8 +25,8 @@ set t_Co=256
 set ignorecase
 "配置backspace的工作方式
 set backspace=indent,eol,start
-"设置在vim中可以使用鼠标
-set mouse=a
+"设置在vim中可以使用鼠标a, 使用鼠标复制内容到剪切板v
+set mouse=v
 "设置tab宽度
 set tabstop=4
 "设置自动对齐空格数
@@ -80,6 +80,7 @@ call vundle#begin()
 "My Bundles here:
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'fatih/vim-go'
+Plugin 'vim-scripts/Conque-GDB'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'SirVer/ultisnips'
 Plugin 'nsf/gocode', {'rtp': 'vim/'}
@@ -88,8 +89,6 @@ Bundle 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'airblade/vim-gitgutter'
 Bundle 'majutsushi/tagbar'
-Bundle 'Blackrush/vim-gocode'
-Bundle 'dgryski/vim-godef'
 Bundle 'tpope/vim-fugitive'
 call vundle#end()
 
@@ -132,7 +131,7 @@ let g:airline_symbols.readonly = '⭤'
 let g:airline_symbols.linenr = '⭡'
 
 "*****************************************************
-""                   tagbar配置                       *
+""                  tagbar配置                       *
 "*****************************************************
 let g:tagbar_ctags_bin='ctags'
 let g:tagbar_width=30
@@ -148,3 +147,27 @@ let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>']
 let g:UltiSnipsExpandTrigger="<tab>"
 "let g:UltiSnipsJumpForwardTrigger="<c-b>"
 "let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+
+"*****************************************************
+""           Conque-GDB配置                        *
+"*****************************************************
+let g:ConqueTerm_CloseOnEnd = 1                                                       
+let g:ConqueTerm_StartMessages = 0                                                    
+                                                                                      
+function DebugSession()                                                               
+    silent make -o vimgdb -gcflags "-N -l"                                            
+    redraw!                                                                           
+    if (filereadable("vimgdb"))                                                       
+        ConqueGdb vimgdb                                                              
+    else                                                                              
+        echom "Couldn't find debug file"                                              
+    endif                                                                             
+endfunction                                                                           
+function DebugSessionCleanup(term)                                                    
+    if (filereadable("vimgdb"))                                                       
+        let ds=delete("vimgdb")                                                       
+    endif                                                                             
+endfunction                                                                           
+call conque_term#register_function("after_close", "DebugSessionCleanup")              
+nmap <leader>d :call DebugSession()<CR>;  
